@@ -10,6 +10,8 @@ MeloPress is a project in ARM Assembly that compresses a file (text file) basing
 5. Uses bits to compress the data.
 6. Can only work on a 2KB-sized file.
 
+`Note: This project was 35% AI and 65% me. I built this project on a MacBook M2 Pro, 2022`
+
 
 # Bugs
 1. AACC bits are similar to the newline character's bits
@@ -41,7 +43,7 @@ GCTCGATAGAGTCCAGATCCATCAGACAGGGAATATATTACAGATACAGGGAGGTAGAGA
 ```
 **Solution**  
 
-As you can tell, the output is not alike the original one which means that we are getting incoherent decompressed data back. A new alternative was concocted--by letting the compressor have this bug we can fix this in the decompressor by using `@` as a marker. `@` is a marker meaning that the decompressor checks 1 byte behind the "newline character" and 1 byte infront looking for `@`. If it finds `@`, it allows a newline character to appear. If it does not find `@` infront and back, a newline is not allowed to appear.
+As you can tell, the output is not alike the original one which means that we are getting incoherent- decompressed data back. A new alternative was concocted--by letting the compressor have this bug we can fix this in the decompressor by using `@` as a marker. `@` is a marker meaning that the decompressor checks 1 byte behind the "newline character" and 1 byte infront looking for `@`. If it finds `@`, it allows a newline character to appear. If it does not find `@` infront and back, a newline is not allowed to appear.
 With this section of code being called whenever a newline claims to be present--even though it is AACC--it can make wise decisions based on the `@`.
 ```
 _handle_special_incident_1:
@@ -99,7 +101,7 @@ GTTACACAAGGATCGCTACAGATATCGGTACGCTAAATATCGCGCCTTAGTAGAGTCGAG@
 
 The program can be reprogrammed to only show a `@` only when there is a newline character right after the `@` like `...@\n`. This enforces all occurrences of `@` without a newline character proceeding them to be utterly decompressed.  
 
-Note: In such a scenario like `...TAAA\n`, using `@` as a marker--like this `...TAAA@\n`--during such a scenario is a brilliant move. This is because: the `@` is a special character which will not trigger the error asserting invalid character; the `@` is a marker and using it here acts as a "newline blocker"--meaning that the program checks forward one byte and finds no newline which decompresses that `@`--allowing the preceeding `@` to be decompressed.
+Note: In such a scenario like `...TAAA\n`, using `@` as a marker--like this `...TAAA@\n`--is a brilliant move. This is because: the `@` is a special character which will not trigger the error asserting invalid character; the `@` is a marker and using it here acts as a "newline blocker"--meaning that the program checks forward one byte and finds no newline which decompresses that `@`--allowing the preceeding `@` to be decompressed.
 ```
 _handle_special_incident_2:
     // checking backward
@@ -138,14 +140,14 @@ In this scenario, the DNA and RNA have mixed up into a file. Integrating a peice
 for_T:
 
     cmp     X23,    #1                              // is program already in RNA mode
-    beq     _end_program
+    beq     _handle_mixed_modes
 
 ```
 ```
 for_U:
 
     cmp     X23,    #0                              // is program already in DNA mode
-    beq     _end_program
+    beq     _handle_mixed_modes
 
 ```
 **Solution**  
@@ -201,7 +203,7 @@ As you can tell, there is a file header which indicates DNA if it is **00** or R
 
 3. An Example Walkthrough  
 
-The **40** is the `@`, **0a** is the newline character, **d8** is the byte with **GUCA** packed into it if the file header has **01** or is the byte with **GTCA**packed into it if the file header has **00**, and ends with **0a** as the newline character.  
+The **40** is the `@`, **0a** is the newline character, **d8** is the byte with **GUCA** packed into it if the file header has **01** or is the byte with **GTCA** packed into it if the file header has **00**, and ends with **0a** as the newline character.  
 
 compressed file
 ```
@@ -225,17 +227,17 @@ Note: The `@` is unnecessary in this scenario because `@` is a marker that allow
 
 4. Special Characters  
 
-A special character--**a @ (or user's [your] chosen character) and a newline character**--are the only special characters considered valid characters in the compression process. In the decompression process, invalid characters' bits are considered hence weird output with invalid characters to decompressor hence for expected output use the **recommended format** respectively.  
+A special character--**a @ (or user's [your] chosen character) and a newline character**--are the only special characters considered valid characters in the compression process. In the decompression process, invalid characters' bits are considered hence weird output with invalid characters to decompressor hence for expected output use the **recommended format**(Check Format Section - Recommended Format) respectively.  
 
 
-Note: `@` could be any other character as long as this character of user's (your) choice is not a byte that will appear in user's (your) DNA or RNA data in file. Remember `@` or user's (your) character is a marker--a character that is going to enable the decompressor detect when to put a newline and when not to do so.
+Note: `@` could be any other character as long as this character of user's (your) choice is not a byte that will appear in user's (your) DNA or RNA data in file. Remember `@` or user's (your) character is a marker--a character that is going to enable the decompressor detect when to put a newline and when not to do so (A character not to be decompressed).
 
 
 5. Error Codes  
 
 Success code **0** means that the program ran successfully without any error.  
 
-Error code **1** means that the program has DNA and RNA nucleotides in it.  
+Error code **1** means that the program has DNA and RNA nucleotides mix up in it.  
 
 Error code **2** means that the program has invalid characters. (Check About Section - 2)  
 
@@ -247,7 +249,7 @@ Note: Let me know if anyone (users) would prefer these error codes injected into
 
 6. Invalid Characters  
 
-Characters not **A, T, C, G, U, @, and the newline character** are considered invalid character in this program. If any invlaid character is found, the program exits immediately and returns error code 2 that signifies the file to be compressed has invalid character(s) (Check Format Section - Error Codes).
+Characters not **A, T, C, G, U, @, and the newline character** are considered invalid character in this program. If any invalid character is found, the program exits immediately and returns error code 2 that signifies the file to be compressed has invalid character(s) (Check Format Section - Error Codes).
 
 
 # Tech Stack
