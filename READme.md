@@ -17,8 +17,8 @@ MeloPress is a project in ARM Assembly that compresses a file (text file) basing
     cmp     W0,     #10                             // ascii code for newline character
     beq     _handle_special_char
 ```
-**Problem**
-/
+**Problem**  
+
 Incase--in an uncompressed file--a line like `...AACC\n` is being worked on, AACC--4 bytes--is being packed into 1 byte. Those bits are fully similar to the bits in a newline character. This causes chaos in the compressed file which later on affects decompression.
 /
 In an uncompressed file
