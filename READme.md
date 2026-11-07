@@ -152,9 +152,7 @@ If user (you) run Prepress many times, it will store the compressed chunks in th
 | **Input**| @AGCT|
 | **User (Your) Calling Convention In Terminal** | ./Prepress/main ./Prepress/test.txt |
 | **\_fgh** |
-|  |
-| 1.fgh|
-|  #H9F9 |
+| 1.fgh |  #H9F9 |
 | **error code** |
 | 0 |
 
@@ -165,9 +163,7 @@ If user (you) run Prepress many times, it will store the compressed chunks in th
 | **Input**| @AAAA|
 | **User (Your) Calling Convention In Terminal** | ./Prepress/main ./Prepress/test.txt |
 | **\_fgh** |
-|  |
-| 1.fgh|
-| #H9G |
+| 1.fgh | #H9G |
 | **error code** |
 | 0 |
 
@@ -190,17 +186,11 @@ If user (you) run Postpress many times, it will just appennd the decompressed da
 |  |  @GCGG|
 | **User (Your) Calling Convention In Terminal** | ./Postpress/main ./\_fgh/1.fgh |
 | **\_fgh** |
-|  |
-| 1.fgh|
-| #H9G  |
-| 2.fgh |
-| #H9Ô|
+| 1.fgh | #H9G  |
+| 2.fgh | #H9Ô|
 | **.hgf** |
-|  |
-|  |
-| @@AAAA|
-|  |
-| @@GCGG|
+| | @@AAAA|
+| | @@GCGG|
 | **error code** |
 | 0 |
 
@@ -213,25 +203,15 @@ If user (you) run Postpress many times, it will just appennd the decompressed da
 |  | @TTTT |
 | **User (Your) Calling Convention In Terminal** | ./Postpress/main ./\_fgh/1.fgh |
 | **\_fgh** |
-|  |
-| 1.fgh|
-| #H9G |
-| 2.fgh |
-| #H9Ô|
-| 3.fgh |
-| #H9U |
+| 1.fgh | #H9G |
+| 2.fgh | #H9Ô|
+| 3.fgh | #H9U |
 | **.hgf** |
-|  |
-|  |
-| @@AAAA |
-|  |
-| @@GCGG |
-|  |
-| @@AAAA |
-|  |
-| @@GCGG |
-|  |
-| @@TTTT |
+| | @@AAAA |
+| | @@GCGG |
+| | @@AAAA |
+| | @@GCGG |
+| | @@TTTT |
 | **error code** |
 | 0 |
 
@@ -546,18 +526,18 @@ Basing on a scenario where Prepress, Postpress, and the input file are in the sa
 Folder layout: `Postpress		Prepress	READme.md	test.txt`\
 User (Your) calling convention: `./Prepress/main test.txt `\
 Folder layout (after successful compression): `Postpress	Prepress	READme.md	test_fgh	test.txt`
-a. Looking at snapshot **1.fgh**
+a. Looking at snapshot **1.fgh**\
 User (Your) calling convention: `./Postpress/main -s ./test_fgh/1.fgh` or `./Postpress/main ./test_fgh/1.fgh -s`\
 Folder layout: `1.hgf	Postpress	Prepress	READme.md	test_fgh	test.txt`
 
-b. Looking at snapshot **2.fgh**
+b. Looking at snapshot **2.fgh**\
 User (Your) calling convention: `./Postpress/main -s ./test_fgh/2.fgh` or `./Postpress/main ./test_fgh/2.fgh -s`\
-Folder layout: `2.hgf	Postpress	Prepress	READme.md	test_fgh	test.txt
+Folder layout: `2.hgf	Postpress	Prepress	READme.md	test_fgh	test.txt`
 
 ### **Note**: The `-s` flag triggers standalone decompression which means that decompression will only be applied to that target file and not the entire files in the comrpessed chunk folder.
 
 
-## Note:
+## Notes:
 ### 1. To see the error codes in the *Terminal*. After running a program, do this to see the result of the last run program.
 ```
 echo $?
