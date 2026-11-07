@@ -47,11 +47,11 @@ When Prepress finishes compression on this kind of file input, Prepress starts t
 When Prepress encounters only a special character, since it creates an output file whenever it encounters a special character. Prepress will create a file and write only the file magic and file header.
 
 ### **Proof**
-File layout: `00000000: 2348 3947                                #H9G`
-File Header: `01000111`
-Bit 6 (From the right; starting at index 0): `1` - this if the first compressed file.
-Bit 2 (From the right; starting at index 0): `1` - this is a `.fgh` file.
-Bit 1 (From the right; starting at index 0): `1` - this is a compressed file.
+File layout: `00000000: 2348 3947                                #H9G`\
+File Header: `01000111`\
+Bit 6 (From the right; starting at index 0): `1` - this if the first compressed file.\
+Bit 2 (From the right; starting at index 0): `1` - this is a `.fgh` file.\
+Bit 1 (From the right; starting at index 0): `1` - this is a compressed file.\
 Bit 0 (From the right; starting at index 0): `1` - this is an RNA file.
 
 ### **c. No starting special characer but data**
@@ -60,12 +60,12 @@ Bit 0 (From the right; starting at index 0): `1` - this is an RNA file.
 ATGC
 @
 ```
-Because Prepress had not written the compressed data anywhere due to no starting special character; Prepress will create a file at the next special character and write the previous data to the newly created output file. It will also add data that comes after the specail character (if there is data after the specail character).
+Because Prepress had not written the compressed data anywhere due to no starting special character; Prepress will create a file at the next special character and write the previous data to the newly created output file. It will also add data that comes after the special character (if there is data after the specail character).
 
 ### **Proof**
-File layout: `00000000: 2348 3946 1e                             #H9F.`
-File header: `01000110`
-Bit 0 (From the right; starting at index 0): `0` - this is a DNA file.
+File layout: `00000000: 2348 3946 1e                             #H9F.`\
+File header: `01000110`\
+Bit 0 (From the right; starting at index 0): `0` - this is a DNA file.\
 `1e` - ATGC
 
 **Note**: This also works for input like `@ATGC`.
@@ -101,8 +101,8 @@ CGGG
 The variable `X26` is by default at the value `2`. Since such input does not have `T` or `U` to trigger DNA or RNA respectively, MeloPress will treat the input as RNA.
 
 ### **Proof**
-File layout: `00000000: 2348 3947 bf                             #H9G.`
-File Header: `01000111`
+File layout: `00000000: 2348 3947 bf                             #H9G.`\
+File Header: `01000111`\
 Bit 0 (From the right; starting at index 0): `1` - which signifies RNA.
 ### **b. If file input to Prepress is:**
 ```
@@ -129,9 +129,9 @@ CGG
 ```
 There will be no error because Prepress handles indivisbility in file length.
 ### **Proof**
-File layout: `00000000: 2348 397f 2f                             #H9./`
-File Header: `01111111`
-Bit 3 (From the right; starting at index 0): `1` - which means that the file length is indivisible by 4.
+File layout: `00000000: 2348 397f 2f                             #H9./`\
+File Header: `01111111`\
+Bit 3 (From the right; starting at index 0): `1` - which means that the file length is indivisible by 4.\
 Bit 4 and Bit 5 (From the right; starting at index 0): `11` - which means that **3** nucleotides are allowed at the end.
 
 ### 4. If folder name is not obtained or there is an error obtaining the folder name
@@ -174,7 +174,7 @@ If user (you) run Prepress many times, it will store the compressed chunks in th
 ### 5. If folder name was not obtained, the output file name will just be?
 Prepress will use the defualt convention to show the output file of decompressed data which is `.hgf`.
 ### **Proof**
-Folder layout: `_fgh	.	..	.DS_Store	.git	.hgf	Postpress	Prepress	READme.md
+Folder layout: `_fgh	.	..	.DS_Store	.git	.hgf	Postpress	Prepress	READme.md`
 
 This could be triggered if Postpress is called like this: `./Postpress/main ./_fgh/1.fgh`.
 
@@ -402,51 +402,35 @@ AGUGCCGG
 test_1_fgh
 ```
 
-```
 1.fgh
-```c
 ```
 #H9_.
 ```
-```
 2.fgh
-```
 ```
 #H9/.
 ```
-```
 3.fgh
-```
 ```
 #H9?.
 ```
-```
 4.fgh
-```
 ```
 #H9.7
 ```
-```
 5.fgh
-```
 ```
 #H9.7.
 ```
-```
 6.fgh
-```
 ```
 #H9/7.
 ```
-```
 7.fgh
-```
 ```
 #H9?7+
 ```
-```
 8.fgh
-```
 ```
 #H9.7.
 ```
@@ -461,7 +445,7 @@ test_1_fgh
    B. file is a head file (the first file to be compressed) `1`
    C. read index did not have any nucleotides left at the end due to read index length being indivisible by 4 `00`
    D. is read index length indivisible by 4 `0`
-   E. file is a ``.fgh`` file `1`
+   E. file is a `.fgh` file `1`
    F. file is in a state of compression (compressed) `1`
    G. file is an RNA file `1`
 ### III. The rest of the bytes above are compressed RNA nucleotides.
@@ -474,7 +458,7 @@ test_1_fgh
    B. file is a head file (the first file to be compressed) `1`
    C. read index did not have any nucleotides left at the end due to read index length being indivisible by 4 `00`
    D. is read index length indivisible by 4 `0`
-   E. file is a ``.fgh`` file `1`
+   E. file is a `.fgh` file `1`
    F. file is in a state of compression (compressed) `1`
    G. file is an DNA file `0`
 ### III. The rest of the bytes above are compressed DNA nucleotides.
@@ -510,48 +494,48 @@ When compressing input data in a file (could be a .txt or .hgf) using the right 
 ### a. Prepress
 - Input file, Prepress, and Postpress in the same directory.
 ### **Proof**
-Folder layout: `Postpress		Prepress	READme.md	test_1.txt`
-User (Your) calling convention: `./Prepress/main test.txt`
+Folder layout: `Postpress		Prepress	READme.md	test_1.txt`\
+User (Your) calling convention: `./Prepress/main test.txt`\
 Folder layout (after successful compression): `Postpress	Prepress	READme.md	test_1_fgh	test_1.txt`
 
 - Input file in Prepress, while Prepress and Postpress in the same directory.
 ### **Proof**
-Folder layout (Prepress): `main		main.o		main.s		Makefile	sampleDNA.txt		sampleRNA.txt		test.txt`
-Folder layout (Current Directory - MeloPress): `Postpress	Prepress	READme.md`
-User (Your) calling convention: `./Prepress/main ./Prepress/test.txt`
-Folder layout (after successful compression - Prepress): `main		main.o		main.s		Makefile	sampleDNA.txt	sampleRNA.txt	test.txt`
+Folder layout (Prepress): `main		main.o		main.s		Makefile	sampleDNA.txt		sampleRNA.txt		test.txt`\
+Folder layout (Current Directory - MeloPress): `Postpress	Prepress	READme.md`\
+User (Your) calling convention: `./Prepress/main ./Prepress/test.txt`\
+Folder layout (after successful compression - Prepress): `main		main.o		main.s		Makefile	sampleDNA.txt	sampleRNA.txt	test.txt`\
 Folder layout (after successful compression - Current Directory - MeloPress): `_fgh	Postpress	Prepress	READme.md`
 
 - Input file in Postpress, while Prepress and Postpress in the same directory.
 ### **Proof**
-Folder layout (Postpress): `main		main.o		main.s		Makefile	sampleDNA_fgh		sampleDNA.hgf		sampleRNA_fgh		sampleRNA.hgf		test_1.txt	test_fgh	test.hgf`
-Folder layout (Current Directory - MeloPress): `Postpress	Prepress	READme.md`
-User (Your) calling convention: `./Prepress/main ./Postpress/test_1.txt `
-Folder layout (after succesful compression - Postpress): `main		main.o		main.s		Makefile	sampleDNA_fgh		sampleDNA.hgf		sampleRNA_fgh		sampleRNA.hgf	test_1.txt	test_fgh	test.hgf`
+Folder layout (Postpress): `main		main.o		main.s		Makefile	sampleDNA_fgh		sampleDNA.hgf		sampleRNA_fgh		sampleRNA.hgf		test_1.txt	test_fgh	test.hgf`\
+Folder layout (Current Directory - MeloPress): `Postpress	Prepress	READme.md`\
+User (Your) calling convention: `./Prepress/main ./Postpress/test_1.txt `\
+Folder layout (after succesful compression - Postpress): `main		main.o		main.s		Makefile	sampleDNA_fgh		sampleDNA.hgf		sampleRNA_fgh		sampleRNA.hgf	test_1.txt	test_fgh	test.hgf`\
 Folder layout: (after successful compression - Current Directory - MeloPress): `_fgh	Postpress	Prepress	READme.md`
 
 
 ### b. Postpress
 - Input file, Prepress, and Postpress in the same directory.
 ### **Proof**
-Folder layout: `Postpress		Prepress	READme.md	test_1_fgh	test_1.txt`
-User (Your) calling convention: `./Postpress/main ./test_1_fgh/1.fgh `
+Folder layout: `Postpress		Prepress	READme.md	test_1_fgh	test_1.txt`\
+User (Your) calling convention: `./Postpress/main ./test_1_fgh/1.fgh`\
 Folder layout (after a successful decompression): `Postpress		Prepress	READme.md	test_1_fgh	test_1.hgf	test_1.txt`
 
 - Input file in Prepress, while Prepress and Postpress in the same directory.
 ### **Proof**
-Folder layout (after successful compression - Prepress): `main		main.o		main.s		Makefile	sampleDNA.txt		sampleRNA.txt		test.txt`
-Folder layout (after successful compression - Current Directory - MeloPress): `_fgh	Postpress	Prepress	READme.md`
-User (Your) calling convention: `./Postpress/main ./_fgh/1.fgh `
-Folder layout (after successful decompression - Prepress): `main	main.o		main.s		Makefile	sampleDNA.txt		sampleRNA.txt		test.txt`
+Folder layout (after successful compression - Prepress): `main		main.o		main.s		Makefile	sampleDNA.txt		sampleRNA.txt		test.txt`\
+Folder layout (after successful compression - Current Directory - MeloPress): `_fgh	Postpress	Prepress	READme.md`\
+User (Your) calling convention: `./Postpress/main ./_fgh/1.fgh `\
+Folder layout (after successful decompression - Prepress): `main	main.o		main.s		Makefile	sampleDNA.txt		sampleRNA.txt		test.txt`\
 Folder layout (after successful decompression - Current Directory - MeloPress): `_fgh	.	..	.DS_Store	.git		.hgf		Postpress	Prepress	READme.md`
 
 - Input file in Postpress, while Prepress and Postpress in the same directory.
 ### **Proof**
-Folder layout (after succesful compression - Postpress): `main		main.o		main.s		Makefile	sampleDNA_fgh		sampleDNA.hgf		sampleRNA_fgh		sampleRNA.hgf	test_1.txt	test_fgh	test.hgf`
-Folder layout: (after successful compression - Current Directory - MeloPress): `_fgh	Postpress	Prepress	READme.md`
-User (Your) calling convention: `./Postpress/main ./_fgh/1.fgh`
-Folder layout (after successful decompression - Postpress): `main		main.o		main.s		Makefile	sampleDNA_fgh		sampleDNA.hgf		sampleRNA_fgh		sampleRNA.hgf	test_1.txt	test_fgh	test.hgf`
+Folder layout (after succesful compression - Postpress): `main		main.o		main.s		Makefile	sampleDNA_fgh		sampleDNA.hgf		sampleRNA_fgh		sampleRNA.hgf	test_1.txt	test_fgh	test.hgf`\
+Folder layout: (after successful compression - Current Directory - MeloPress): `_fgh	Postpress	Prepress	READme.md`\
+User (Your) calling convention: `./Postpress/main ./_fgh/1.fgh`\
+Folder layout (after successful decompression - Postpress): `main		main.o		main.s		Makefile	sampleDNA_fgh		sampleDNA.hgf		sampleRNA_fgh		sampleRNA.hgf	test_1.txt	test_fgh	test.hgf`\
 Folder layout (after successful decompression - Current Directory - MeloPress): `_fgh		.		..		.DS_Store	.git		.hgf		Postpress	Prepress	READme.md`
 
 ### **Note**:
@@ -559,15 +543,15 @@ This is just a way to illustrate how MeloPress's Prepress and Postpress expect *
 Basing on a scenario where Prepress, Postpress, and the input file are in the same directory. This can be applied to scenarios illustrated earlier (See Terminal Arguments).
 
 ### **Proof**
-Folder layout: `Postpress		Prepress	READme.md	test.txt`
-User (Your) calling convention: `./Prepress/main test.txt `
+Folder layout: `Postpress		Prepress	READme.md	test.txt`\
+User (Your) calling convention: `./Prepress/main test.txt `\
 Folder layout (after successful compression): `Postpress	Prepress	READme.md	test_fgh	test.txt`
 a. Looking at snapshot **1.fgh**
-User (Your) calling convention: `./Postpress/main -s ./test_fgh/1.fgh` or `./Postpress/main ./test_fgh/1.fgh -s`
+User (Your) calling convention: `./Postpress/main -s ./test_fgh/1.fgh` or `./Postpress/main ./test_fgh/1.fgh -s`\
 Folder layout: `1.hgf	Postpress	Prepress	READme.md	test_fgh	test.txt`
 
 b. Looking at snapshot **2.fgh**
-User (Your) calling convention: `./Postpress/main -s ./test_fgh/2.fgh` or `./Postpress/main ./test_fgh/2.fgh -s`
+User (Your) calling convention: `./Postpress/main -s ./test_fgh/2.fgh` or `./Postpress/main ./test_fgh/2.fgh -s`\
 Folder layout: `2.hgf	Postpress	Prepress	READme.md	test_fgh	test.txt
 
 ### **Note**: The `-s` flag triggers standalone decompression which means that decompression will only be applied to that target file and not the entire files in the comrpessed chunk folder.
