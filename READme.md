@@ -32,21 +32,21 @@ j. Any file NOT of this kind will NOT be touched (removed). In addition to this,
 ### 1. Illegal input
 Input like this does not meet the format section's requirements (See the Format Section).
 
-### **a. No special character**
+### a. No special character
 
 ```
 AGCT
 ```
 When Prepress finishes compression on this kind of file input, Prepress starts to write the compressed data to output file. During write, write fails because Prepress needs the sprecial character (`@`) to create the output file for that current read index. Since this input does not have the special character, the output file will not be created but the compressed chunk folder is created.
 
-### **b. Only a special character**
+### b. Only a special character
 
 ```
 @
 ```
 When Prepress encounters only a special character, since it creates an output file whenever it encounters a special character. Prepress will create a file and write only the file magic and file header.
 
-### **Proof**
+### Proof
 File layout: `00000000: 2348 3947                                #H9G`\
 File Header: `01000111`\
 Bit 6 (From the right; starting at index 0): `1` - this if the first compressed file.\
@@ -54,7 +54,7 @@ Bit 2 (From the right; starting at index 0): `1` - this is a `.fgh` file.\
 Bit 1 (From the right; starting at index 0): `1` - this is a compressed file.\
 Bit 0 (From the right; starting at index 0): `1` - this is an RNA file.
 
-### **c. No starting special characer but data**
+### c. No starting special characer but data
 
 ```
 ATGC
@@ -62,7 +62,7 @@ ATGC
 ```
 Because Prepress had not written the compressed data anywhere due to no starting special character; Prepress will create a file at the next special character and write the previous data to the newly created output file. It will also add data that comes after the special character (if there is data after the specail character).
 
-### **Proof**
+### Proof
 File layout: `00000000: 2348 3946 1e                             #H9F.`\
 File header: `01000110`\
 Bit 0 (From the right; starting at index 0): `0` - this is a DNA file.\
@@ -90,27 +90,27 @@ for_U:
     beq     _handle_mixed_modes
 ```
 
-### **Solution**
+### Solution
 By checking modes, the program makes sure it is dealing with one mode and not two-mixed up modes. If two modes appear mixed up then the program stops executing and exits with error code (8) and does not write anything to the output file due to the error.
 #### Notes:
-### **a) If file input to Prepress is:**
+### a) If file input to Prepress is:
 ```
 @
 CGGG
 ```
 The variable `X26` is by default at the value `2`. Since such input does not have `T` or `U` to trigger DNA or RNA respectively, MeloPress will treat the input as RNA.
 
-### **Proof**
+### Proof
 File layout: `00000000: 2348 3947 bf                             #H9G.`\
 File Header: `01000111`\
 Bit 0 (From the right; starting at index 0): `1` - which signifies RNA.
-### **b. If file input to Prepress is:**
+### b. If file input to Prepress is:
 ```
 @
 CGGGUT
 ```
 Despite file having indivisible length by 4, Prepress still checks for mixed up modes. The outcome is still error code (8) and Prepress does not write anything to output file due to the error.
-### **c. Even illegal input that violates format requirements is screened out:**
+### c. Even illegal input that violates format requirements is screened out:
 ```
 GUCATGGG
 ```
@@ -119,16 +119,16 @@ This input may violate format requirements but Prepress will screen this out as 
 ### 3. File with length indivisible by 4
 ### Problem
 In a scenario like this `...GCA\n` whereby the length is 3. The program wants 4 bytes so that it can pack those 4 bytes into 1 byte using 2-bit compression. Indivisible file lengths cause trouble to the program flow. To counter this, I adopted the use of file headers which help in storing useful information for decompression. The file header can store infomation like if this file data's length was indivisible by 4.
-### **Solution**
+### Solution
 If the read index has an indivisble length (not divisible by 4), MeloPress will write the remainign bytes to the end of the file and indicate in the file header (the current file created where results of the current Read Index are stored) that this read index's data length was indivisble by 4.
 #### Notes:
-### **a. If file input is:**
+### a. If file input is:
 ```
 @
 CGG
 ```
 There will be no error because Prepress handles indivisbility in file length.
-### **Proof**
+### Proof
 File layout: `00000000: 2348 397f 2f                             #H9./`\
 File Header: `01111111`\
 Bit 3 (From the right; starting at index 0): `1` - which means that the file length is indivisible by 4.\
@@ -136,14 +136,14 @@ Bit 4 and Bit 5 (From the right; starting at index 0): `11` - which means that *
 
 ### 4. If folder name is not obtained or there is an error obtaining the folder name
 Prepress will use the default convention to show the compressed chunk folder which is `_fgh`. 
-### **Proof**
+### Proof
 Folder layout: `_fgh	Postpress	Prepress	READme.md`
 
 This could be triggered if Prepress is called like this: `./Prepress/main ./Prepress/test.txt`. Since Prepress does not have the ability to obtain the folder name from this kind of calling convention, it will use the default calling convention.
 
 **Note**:
 If user (you) run Prepress many times, it will store the compressed chunks in this folder during such situation. On round two, Prepress will clear `_fgh` and overwrite that preexisting information.
-### **Proof**
+### Proof
 
 ### On Round One
 
@@ -151,7 +151,7 @@ If user (you) run Prepress many times, it will store the compressed chunks in th
 | --- | --- |
 | **Input**| @AGCT|
 | **User (Your) Calling Convention In Terminal** | ./Prepress/main ./Prepress/test.txt |
-| **\_fgh** |
+| **Folder** | **\_fgh** |
 | 1.fgh |  #H9F9 |
 | **error code** | 0 |
 
@@ -159,22 +159,22 @@ If user (you) run Prepress many times, it will store the compressed chunks in th
 
 | Column 1 | Column 2 |
 | --- | --- |
-| **Input**| @AAAA|
+| **Input** | @AAAA|
 | **User (Your) Calling Convention In Terminal** | ./Prepress/main ./Prepress/test.txt |
-| **\_fgh** |
+| **Folder** | **\_fgh** |
 | 1.fgh | #H9G |
 | **error code** | 0 |
 
 ### 5. If folder name was not obtained, the output file name will just be?
 Prepress will use the defualt convention to show the output file of decompressed data which is `.hgf`.
-### **Proof**
+### Proof
 Folder layout: `_fgh	.	..	.DS_Store	.git	.hgf	Postpress	Prepress	READme.md`
 
 This could be triggered if Postpress is called like this: `./Postpress/main ./_fgh/1.fgh`.
 
 **Note**:
 If user (you) run Postpress many times, it will just appennd the decompressed data to the output file (in this case `.hgf`).
-### **Proof**
+### Proof
 
 ### On Round One
 
@@ -183,7 +183,7 @@ If user (you) run Postpress many times, it will just appennd the decompressed da
 | **Input**| @AAAA|
 |  |  @GCGG|
 | **User (Your) Calling Convention In Terminal** | ./Postpress/main ./\_fgh/1.fgh |
-| **\_fgh** |
+| **Folder** | **\_fgh** |
 | 1.fgh | #H9G  |
 | 2.fgh | #H9Ô|
 | **.hgf** |
@@ -199,11 +199,11 @@ If user (you) run Postpress many times, it will just appennd the decompressed da
 | | @GCGG|
 |  | @TTTT |
 | **User (Your) Calling Convention In Terminal** | ./Postpress/main ./\_fgh/1.fgh |
-| **\_fgh** |
+| **Folder** | **\_fgh** |
 | 1.fgh | #H9G |
 | 2.fgh | #H9Ô|
 | 3.fgh | #H9U |
-| **.hgf** |
+| **File** | **.hgf** |
 | | @@AAAA |
 | | @@GCGG |
 | | @@AAAA |
@@ -213,7 +213,7 @@ If user (you) run Postpress many times, it will just appennd the decompressed da
 
 ### 6. If input has read indexes with empty data
 Prepress will recognize read indexes without information. This means that if a read index was empty there is an empty file taking up that position. The reason I leave this feature is that during tests it was discovered that when Prepress disregards the empty read indexes, this violates the original pattern in the data.
-### **Proof**
+### Proof
 
 | Column 1 | Column 2 |
 | --- | --- |
@@ -222,12 +222,12 @@ Prepress will recognize read indexes without information. This means that if a r
 |  | @GCGG|
 | | @TTTT|
 |  **User(Your) Calling Convention In Terminal** | ./Prepress/main ./Prepress/test.txt |
-| **\_fgh** |  |
+| **Folder** | **\_fgh** |
 | 1.fgh | #H9G|
 | 2.fgh | #H9 |
 | 3.fgh | #H9Ô|
 | 3.fgh | #H9U |
-| **.hgf** |  |
+| **File** | **.hgf** |
 | |  @@AAAA|
 |  |  @@|
 |  |  @@GCGG|
@@ -236,7 +236,7 @@ Prepress will recognize read indexes without information. This means that if a r
 
 ### 7. Mixed data in input file
 Prepress will check for DNA in RNA or RNA in DNA and exit with error code (8) if True. When the data starts as valid, there is a behaviour that is notable. When Prepress encounters an invalid section of the data, it will have compressed all the valid data to that point then it will stop (exit) compression without compressing that read index.
-### **Proof**
+### Proof
 
 | Column 1 | Column 2 |
 | --- | --- |
@@ -246,21 +246,21 @@ Prepress will check for DNA in RNA or RNA in DNA and exit with error code (8) if
 |  |  @TTTT|
 |  |  @TUUT|
 | **User (Your) Calling Convention In Terminal** |  ./Prepress/main ./Prepress/test.txt|
-| **\_fgh** |  |
+| **Folder** | **\_fgh** |
 | 1.fgh | #H9G  |
 | 2.fgh | #H9Ô |
 | 3.fgh |  #H9U|
 | 4.fgh | |
 | **error code** | 8 |
 | **User (Your) Calling Convention In Terminal** |  ./Postpress/main ./\_fgh/1.fgh |
-| **O****utput** | @@AAAA |
+| **Output** | @@AAAA |
 |  |  @@GCGG|
 |  |  @@TTTT|
 | **error code** | 0 |
 
 ### 8. If one or more file headers are corrupted
 Postpress will decompress all compressed chunk folder files. When it encounters a corrupted file header or file magic, it stops (exits) with error code (4).
-### **Proof**
+### Proof
 
 | Column 1 | Column 2 |
 | --- | --- |
@@ -271,7 +271,7 @@ Postpress will decompress all compressed chunk folder files. When it encounters 
 |  |  @TAAT|
 |  |  @CGGCGA|
 | **User (Your) Calling Convention In Terminal** | ./Prepress/main ./Prepress/test.txt |
-| **\_fgh** |  |
+| **Folder** | **\_fgh** |
 | 1.fgh |  #H9_  |
 | 2.fgh | #H9Ô |
 | 3.fgh |  #H9>U|
@@ -284,16 +284,16 @@ Postpress will decompress all compressed chunk folder files. When it encounters 
 |  |  @@TTTTTTT|
 | **error code** | 4 |
 
-### **Note**: If user (you) experiences error code 4, re-run Prepress to compress the input file again which resets everything.
+### Note: If user (you) experiences error code 4, re-run Prepress to compress the input file again which resets everything.
 
 ### 9. Invalid characters
 Invalid characters are skipped during compresssion, but there are behaviours to take note of.
 
-### **Notes**:
-a. Using another character for a special character instead of (@)
+### Notes:
+### a. Using another character for a special character instead of (@)
 Prepress code only recognizes `@`  as the special character (the character that acts as a separactor and read index marker). Using any other special character like I did choose `#`.
 Prepress will skip `#` and since there is no special character (this special character also helps Prepress to create a file for output). The final result is that there are no output files in the compressed chunk folder.
-### **Proof**
+### Proof
 
 | Column 1 | Column 2 |
 | --- | --- |
@@ -304,15 +304,15 @@ Prepress will skip `#` and since there is no special character (this special cha
 |  |  #TAAT|
 |  |  #CGGCGA|
 | **User (Your) Calling Convention In Terminal** | ./Prepress/main ./Prepress/test.txt |
-| **\_fgh** |  |
+| **Folder** | **\_fgh** |
 | **error code** | 0 |
 | **User (Your) Calling Convention In Terminal** | ./Postpress/main ./\_fgh |
 | **Output** |  |
 | **error code** | 3 |
 
-### **b. Invalid characters in the input file**
+### b. Invalid characters in the input file
 If there are invalid characters in the input, they are skipped and Prepress will consider only valid characters even though they might be part of the invalid characters. This causes corruption of data too.
-### **Proof**
+### Proof
 
 | Column 1 | Column 2 |
 | --- | --- |
@@ -329,7 +329,7 @@ If there are invalid characters in the input, they are skipped and Prepress will
 |  |  CGGCGA|
 |  |  file|
 | **User (Your) Calling Convention In Terminal** |  ./Prepress/main ./Prepress/test.txt |
-| **\_fgh** |  |
+| **Folder** | **\_fgh** |
 | 1.fgh | #H9n@  |
 | 2.fgh | #H9Ô |
 | 3.fgh | #H9>U |
@@ -344,7 +344,7 @@ If there are invalid characters in the input, they are skipped and Prepress will
 |  |  @@CGGCGA|
 | **error code** | 0 |
 
-### **Note**: You (user) can see that the first `T` was added to valid data yet it was part of the invalid data. Technically it is a valid character but this causes corruption. This leads to a conclusion that Prepress only compresses valid characters (A, T/U, G, C) and special characters (@).
+### Note: You (user) can see that the first `T` was added to valid data yet it was part of the invalid data. Technically it is a valid character but this causes corruption. This leads to a conclusion that Prepress only compresses valid characters (A, T/U, G, C) and special characters (@).
 
 
 # Format
@@ -372,7 +372,7 @@ AGUGCCG
 AGUGCCGG
 ```
 
-### 2. Recommended Input Format For Compressed Chunk Folder - For** Postpress**
+### 2. Recommended Input Format For Compressed Chunk Folder - For **Postpress**
 
 ```
 test_1_fgh
@@ -469,13 +469,13 @@ Error code 9 (In Prepress) means that cleaning up (removing the last file create
 When compressing input data in a file (could be a .txt or .hgf) using the right method of parsing *Terminal* arguments is key to getting error free results. Let's look at some scenarios that are common and see how to compress and decompress input.
 ### a. Prepress
 - Input file, Prepress, and Postpress in the same directory.
-### **Proof**
+### Proof
 Folder layout: `Postpress		Prepress	READme.md	test_1.txt`\
 User (Your) calling convention: `./Prepress/main test.txt`\
 Folder layout (after successful compression): `Postpress	Prepress	READme.md	test_1_fgh	test_1.txt`
 
 - Input file in Prepress, while Prepress and Postpress in the same directory.
-### **Proof**
+### Proof
 Folder layout (Prepress): `main		main.o		main.s		Makefile	sampleDNA.txt		sampleRNA.txt		test.txt`\
 Folder layout (Current Directory - MeloPress): `Postpress	Prepress	READme.md`\
 User (Your) calling convention: `./Prepress/main ./Prepress/test.txt`\
@@ -483,7 +483,7 @@ Folder layout (after successful compression - Prepress): `main		main.o		main.s		
 Folder layout (after successful compression - Current Directory - MeloPress): `_fgh	Postpress	Prepress	READme.md`
 
 - Input file in Postpress, while Prepress and Postpress in the same directory.
-### **Proof**
+### Proof
 Folder layout (Postpress): `main		main.o		main.s		Makefile	sampleDNA_fgh		sampleDNA.hgf		sampleRNA_fgh		sampleRNA.hgf		test_1.txt	test_fgh	test.hgf`\
 Folder layout (Current Directory - MeloPress): `Postpress	Prepress	READme.md`\
 User (Your) calling convention: `./Prepress/main ./Postpress/test_1.txt `\
@@ -493,13 +493,13 @@ Folder layout: (after successful compression - Current Directory - MeloPress): `
 
 ### b. Postpress
 - Input file, Prepress, and Postpress in the same directory.
-### **Proof**
+### Proof
 Folder layout: `Postpress		Prepress	READme.md	test_1_fgh	test_1.txt`\
 User (Your) calling convention: `./Postpress/main ./test_1_fgh/1.fgh`\
 Folder layout (after a successful decompression): `Postpress		Prepress	READme.md	test_1_fgh	test_1.hgf	test_1.txt`
 
 - Input file in Prepress, while Prepress and Postpress in the same directory.
-### **Proof**
+### Proof
 Folder layout (after successful compression - Prepress): `main		main.o		main.s		Makefile	sampleDNA.txt		sampleRNA.txt		test.txt`\
 Folder layout (after successful compression - Current Directory - MeloPress): `_fgh	Postpress	Prepress	READme.md`\
 User (Your) calling convention: `./Postpress/main ./_fgh/1.fgh `\
@@ -507,18 +507,18 @@ Folder layout (after successful decompression - Prepress): `main	main.o		main.s	
 Folder layout (after successful decompression - Current Directory - MeloPress): `_fgh	.	..	.DS_Store	.git		.hgf		Postpress	Prepress	READme.md`
 
 - Input file in Postpress, while Prepress and Postpress in the same directory.
-### **Proof**
+### Proof
 Folder layout (after succesful compression - Postpress): `main		main.o		main.s		Makefile	sampleDNA_fgh		sampleDNA.hgf		sampleRNA_fgh		sampleRNA.hgf	test_1.txt	test_fgh	test.hgf`\
 Folder layout: (after successful compression - Current Directory - MeloPress): `_fgh	Postpress	Prepress	READme.md`\
 User (Your) calling convention: `./Postpress/main ./_fgh/1.fgh`\
 Folder layout (after successful decompression - Postpress): `main		main.o		main.s		Makefile	sampleDNA_fgh		sampleDNA.hgf		sampleRNA_fgh		sampleRNA.hgf	test_1.txt	test_fgh	test.hgf`\
 Folder layout (after successful decompression - Current Directory - MeloPress): `_fgh		.		..		.DS_Store	.git		.hgf		Postpress	Prepress	READme.md`
 
-### **Note**:
+### Note:
 This is just a way to illustrate how MeloPress's Prepress and Postpress expect *Terminal* arguments. If user (you) are wondering how to just decompress one file instead of the whole chunk folder, there is a way to achieve that.
 Basing on a scenario where Prepress, Postpress, and the input file are in the same directory. This can be applied to scenarios illustrated earlier (See Terminal Arguments).
 
-### **Proof**
+### Proof
 Folder layout: `Postpress		Prepress	READme.md	test.txt`\
 User (Your) calling convention: `./Prepress/main test.txt `\
 Folder layout (after successful compression): `Postpress	Prepress	READme.md	test_fgh	test.txt`\
@@ -530,7 +530,7 @@ b. Looking at snapshot **2.fgh**\
 User (Your) calling convention: `./Postpress/main -s ./test_fgh/2.fgh` or `./Postpress/main ./test_fgh/2.fgh -s`\
 Folder layout: `2.hgf	Postpress	Prepress	READme.md	test_fgh	test.txt`
 
-### **Note**: The `-s` flag triggers standalone decompression which means that decompression will only be applied to that target file and not the entire files in the comrpessed chunk folder.
+### Note: The `-s` flag triggers standalone decompression which means that decompression will only be applied to that target file and not the entire files in the comrpessed chunk folder.
 
 
 ## Notes:
