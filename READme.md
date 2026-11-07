@@ -1,7 +1,7 @@
-# MeloPress #
+# MeloPress
 MeloPress is a project in ARM Assembly that compresses a file (DNA/RNA valid file). It gets 4 bytes (A,T/U,G,C) and compresses them into 1 byte by using 2-bit compression. This involves getting the first byte and putting only 2-bits of it into the first lower section of a byte and MeloPress continues till 4 kinds of 2-bit pairs are into that byte hence 4 bytes have been packed into 1 byte. This on average gives a drastic reduction in file size. I am adopting this project into [DNAGenre](https://github.com/imboowa/DNAGenre), just like I did with [Decode](https://github.com/imboowa/Decode), so that DNAGenre can compress and decompress valid DNA/RNA files.
 
-# About #
+# About
 1. Works on validly formatted files (Check Format Section).
 2. Only **@**,** A**, **T**, **G**, **C**, and **U** are valid characters during compression.
 3. A file header for each read index that influences crucial program decisions.
@@ -29,7 +29,7 @@ j. Any file NOT of this kind will NOT be touched (removed). In addition to this,
 
 # Bugs
 
-### 1. Illegal input
+## 1. Illegal input
 Input like this does not meet the format section's requirements (See the Format Section).
 
 ### a. No special character
@@ -70,7 +70,7 @@ Bit 0 (From the right; starting at index 0): `0` - this is a DNA file.\
 
 **Note**: This also works for input like `@ATGC`.
 
-### 2. Mixing DNA and RNA nucleotides in a file
+## 2. Mixing DNA and RNA nucleotides in a file
 ```
 @
 GUCATGGG
@@ -92,8 +92,8 @@ for_U:
 
 ### Solution
 By checking modes, the program makes sure it is dealing with one mode and not two-mixed up modes. If two modes appear mixed up then the program stops executing and exits with error code (8) and does not write anything to the output file due to the error.
-#### Notes:
-### a) If file input to Prepress is:
+### Notes:
+### a. If file input to Prepress is:
 ```
 @
 CGGG
@@ -116,7 +116,7 @@ GUCATGGG
 ```
 This input may violate format requirements but Prepress will screen this out as mixed modes with error code (8).
 
-### 3. File with length indivisible by 4
+## 3. File with length indivisible by 4
 ### Problem
 In a scenario like this `...GCA\n` whereby the length is 3. The program wants 4 bytes so that it can pack those 4 bytes into 1 byte using 2-bit compression. Indivisible file lengths cause trouble to the program flow. To counter this, I adopted the use of file headers which help in storing useful information for decompression. The file header can store infomation like if this file data's length was indivisible by 4.
 ### Solution
@@ -134,7 +134,7 @@ File Header: `01111111`\
 Bit 3 (From the right; starting at index 0): `1` - which means that the file length is indivisible by 4.\
 Bit 4 and Bit 5 (From the right; starting at index 0): `11` - which means that **3** nucleotides are allowed at the end.
 
-### 4. If folder name is not obtained or there is an error obtaining the folder name
+## 4. If folder name is not obtained or there is an error obtaining the folder name
 Prepress will use the default convention to show the compressed chunk folder which is `_fgh`. 
 ### Proof
 Folder layout: `_fgh	Postpress	Prepress	READme.md`
@@ -165,7 +165,7 @@ If user (you) run Prepress many times, it will store the compressed chunks in th
 | 1.fgh | #H9G |
 | **error code** | 0 |
 
-### 5. If folder name was not obtained, the output file name will just be?
+## 5. If folder name was not obtained, the output file name will just be?
 Prepress will use the defualt convention to show the output file of decompressed data which is `.hgf`.
 ### Proof
 Folder layout: `_fgh	.	..	.DS_Store	.git	.hgf	Postpress	Prepress	READme.md`
@@ -211,7 +211,7 @@ If user (you) run Postpress many times, it will just appennd the decompressed da
 | | @@TTTT |
 | **error code** | 0 |
 
-### 6. If input has read indexes with empty data
+## 6. If input has read indexes with empty data
 Prepress will recognize read indexes without information. This means that if a read index was empty there is an empty file taking up that position. The reason I leave this feature is that during tests it was discovered that when Prepress disregards the empty read indexes, this violates the original pattern in the data.
 ### Proof
 
@@ -234,7 +234,7 @@ Prepress will recognize read indexes without information. This means that if a r
 |  |  @@TTTT|
 | **error code** | 0 |
 
-### 7. Mixed data in input file
+## 7. Mixed data in input file
 Prepress will check for DNA in RNA or RNA in DNA and exit with error code (8) if True. When the data starts as valid, there is a behaviour that is notable. When Prepress encounters an invalid section of the data, it will have compressed all the valid data to that point then it will stop (exit) compression without compressing that read index.
 ### Proof
 
@@ -258,7 +258,7 @@ Prepress will check for DNA in RNA or RNA in DNA and exit with error code (8) if
 |  |  @@TTTT|
 | **error code** | 0 |
 
-### 8. If one or more file headers are corrupted
+## 8. If one or more file headers are corrupted
 Postpress will decompress all compressed chunk folder files. When it encounters a corrupted file header or file magic, it stops (exits) with error code (4).
 ### Proof
 
@@ -286,7 +286,7 @@ Postpress will decompress all compressed chunk folder files. When it encounters 
 
 ### Note: If user (you) experiences error code 4, re-run Prepress to compress the input file again which resets everything.
 
-### 9. Invalid characters
+## 9. Invalid characters
 Invalid characters are skipped during compresssion, but there are behaviours to take note of.
 
 ### Notes:
@@ -348,7 +348,7 @@ If there are invalid characters in the input, they are skipped and Prepress will
 
 
 # Format
-### 1. Recommended Input Format - For **Prepress**
+## 1. Recommended Input Format - For **Prepress**
 
 ```
 test_1.txt
@@ -372,7 +372,7 @@ AGUGCCG
 AGUGCCGG
 ```
 
-### 2. Recommended Input Format For Compressed Chunk Folder - For **Postpress**
+## 2. Recommended Input Format For Compressed Chunk Folder - For **Postpress**
 
 ```
 test_1_fgh
@@ -411,7 +411,7 @@ test_1_fgh
 #H9.7.
 ```
 
-### 3. File Header Bits
+## 3. File Header Bits
 ```
 00000000: 2348 3947 c923 12b1 b112 c8c4 8c4c 8c4c  #H9G.#.......L.L
 ```
@@ -438,11 +438,11 @@ test_1_fgh
    F. file is in a state of compression (compressed) `1`
    G. file is an DNA file `0`
 ### III. The rest of the bytes above are compressed DNA nucleotides.
-### 4. Special Characters  
+## 4. Special Characters  
 ```
 A special character (@) is the only special character considered a valid character in the compression process other than A,T/U,C,G. In the decompression process, invalid characters' bits are considered. For expected output use the recommended format (Check Format Section - Recommended Format) respectively.
 ```
-### 5. Error Codes  
+## 5. Error Codes  
 ```
 Success code 0 means that the program (Prepress/Postpress) ran successfully without any error.
 
@@ -465,7 +465,7 @@ Error code 8 (In Prepress) means that the uncompressed data file has DNA and RNA
 Error code 9 (In Prepress) means that cleaning up (removing the last file created by mistake during compression) was unsuccessful. In Postpress means that there was an error reading input from a compressed file during decompression.
 ```
 
-### 6. Termial Arguments
+## 6. Termial Arguments
 When compressing input data in a file (could be a .txt or .hgf) using the right method of parsing *Terminal* arguments is key to getting error free results. Let's look at some scenarios that are common and see how to compress and decompress input.
 ### a. Prepress
 - Input file, Prepress, and Postpress in the same directory.
@@ -533,13 +533,13 @@ Folder layout: `2.hgf	Postpress	Prepress	READme.md	test_fgh	test.txt`
 ### Note: The `-s` flag triggers standalone decompression which means that decompression will only be applied to that target file and not the entire files in the comrpessed chunk folder.
 
 
-## Notes:
-### 1. To see the error codes in the *Terminal*. After running a program, do this to see the result of the last run program.
+# Notes:
+## 1. To see the error codes in the *Terminal*. After running a program, do this to see the result of the last run program.
 ```
 echo $?
 ```
-### 2. To decompress a compressed chunk folder, the target file must be **1.fgh**. This file is the head file that has a bit in the file header that informs Postpress to decompress the entire compressed chunk folder if not in standalone decompression.
-### 3. I have added some test files that I recommend user (you) try them out.
+## 2. To decompress a compressed chunk folder, the target file must be **1.fgh**. This file is the head file that has a bit in the file header that informs Postpress to decompress the entire compressed chunk folder if not in standalone decompression.
+## 3. I have added some test files that I recommend user (you) try them out.
 ### a. Below is the code I created to generate decent data for MeloPress. `sampleDNA.txt` and `sampleRNA.txt`.
 ```python
 nucleotides = ("A", "C", "G", "T")
@@ -579,11 +579,11 @@ with open('sampleRNA.txt', 'w') as f:
 ### b. I have added another test file that has difficult scenarios that MeloPress might fail. Try it out too `test.txt`.
 
 # Take Aways
-### 1. This project has a space complexity of O(n) because it takes up as much space on disk as much as the data given. If given 1,000,000 read indexes, MeloPress will create a million files for this. It will not exceed this limit in order to prevent filling the user's (your) disk even though this is still a large number of files. There is away to reduce this (creating lots of files). By isolating read indexes with bytes that resemble the newline character or the @ character, the files could be broken down into normal files (stores read indexes that do not have the newline character or the @ character in the read index data) and special files (stores read indexes that have the @ character and the newline character in the read index data).
-### This might seem promising but it hinders a certain achievement I made. When files are bundled into the normal files and the special files, the ability to keep track of read indexes who have data length indivisble by 4 is gone. On the other hand having each read index in a respective file allows MeloPress to store valuable information into file headers which preserves data but trades off computer space (lots of files are created). I decided to trade off space rather than the data itself.
-### I might want to avoid creating a lot of files by creating a normal file with read index header then the read index data then the next read index header then the next read index data etc. This is still the same bug I had to fix in earlier versions. Some bytes might resemble the read index header and MeloPress will get confused hence corrupted data is returned.
-### With these unpredictable bugs, the current way is the best way for MeloPress to move forward safely and accurately.
-### 2. DNAGenre's MeloPress and this MeloPress compress data differently. DNAGenre's MeloPress is made in Python which provides the luxury of looking at the entire input at once in a go and compress it at once. This is fine but results in a poor execution time and might not work on systems with less resources. On the other side, this MeloPress looks at the entire input in chunks (breaking down the data in manageable pieces) which contributes to its mindblowing execution time. The final conclusion is that they both compress input differently but decompress it similarly.
+## 1. This project has a space complexity of O(n) because it takes up as much space on disk as much as the data given. If given 1,000,000 read indexes, MeloPress will create a million files for this. It will not exceed this limit in order to prevent filling the user's (your) disk even though this is still a large number of files. There is away to reduce this (creating lots of files). By isolating read indexes with bytes that resemble the newline character or the @ character, the files could be broken down into normal files (stores read indexes that do not have the newline character or the @ character in the read index data) and special files (stores read indexes that have the @ character and the newline character in the read index data).
+## This might seem promising but it hinders a certain achievement I made. When files are bundled into the normal files and the special files, the ability to keep track of read indexes who have data length indivisble by 4 is gone. On the other hand having each read index in a respective file allows MeloPress to store valuable information into file headers which preserves data but trades off computer space (lots of files are created). I decided to trade off space rather than the data itself.
+## I might want to avoid creating a lot of files by creating a normal file with read index header then the read index data then the next read index header then the next read index data etc. This is still the same bug I had to fix in earlier versions. Some bytes might resemble the read index header and MeloPress will get confused hence corrupted data is returned.
+## With these unpredictable bugs, the current way is the best way for MeloPress to move forward safely and accurately.
+## 2. DNAGenre's MeloPress and this MeloPress compress data differently. DNAGenre's MeloPress is made in Python which provides the luxury of looking at the entire input at once in a go and compress it at once. This is fine but results in a poor execution time and might not work on systems with less resources. On the other side, this MeloPress looks at the entire input in chunks (breaking down the data in manageable pieces) which contributes to its mindblowing execution time. The final conclusion is that they both compress input differently but decompress it similarly.
 ### a. MeloPress can compress an input file and DNAGenre's Postpress can decompress that input file (Compatible this way).
 ### b. DNAGenre's Prepress can compress an input file but MeloPress's Postpress cannot decompress that input from DNAGenre's Prepress (Incompatible this way). If this works, I have noticed during tests that MeloPress' output is split into two files or more.
 ### c. When compressing a file be consistent with the architecture used. If user (you) use DNAGenre's MeloPress to compress input then use DNAGenre to decompress that input. If user (you) use MeloPress to compress, then use MeloPress to decompress.
