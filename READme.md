@@ -1,9 +1,9 @@
-# MeloPress
+# MeloPress #
 MeloPress is a project in ARM Assembly that compresses a file (DNA/RNA valid file). It gets 4 bytes (A,T/U,G,C) and compresses them into 1 byte by using 2-bit compression. This involves getting the first byte and putting only 2-bits of it into the first lower section of a byte and MeloPress continues till 4 kinds of 2-bit pairs are into that byte hence 4 bytes have been packed into 1 byte. This on average gives a drastic reduction in file size. I am adopting this project into [DNAGenre](https://github.com/imboowa/DNAGenre), just like I did with [Decode](https://github.com/imboowa/Decode), so that DNAGenre can compress and decompress valid DNA/RNA files.
 
-# About
+# About #
 1. Works on validly formatted files (Check Format Section).
-2. Only **@**,**A**, **T**, **G**, **C**, and **U** are valid characters during compression.
+2. Only **@**,** A**, **T**, **G**, **C**, and **U** are valid characters during compression.
 3. A file header for each read index that influences crucial program decisions.
 4. Achieves a drastic reduction in file size on average for valid DNA/RNA files.
 5. Uses bits to compress the data.
