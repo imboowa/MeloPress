@@ -153,8 +153,7 @@ If user (you) run Prepress many times, it will store the compressed chunks in th
 | **User (Your) Calling Convention In Terminal** | ./Prepress/main ./Prepress/test.txt |
 | **\_fgh** |
 | 1.fgh |  #H9F9 |
-| **error code** |
-| 0 |
+| **error code** | 0 |
 
 ### On Round Two
 
@@ -164,8 +163,7 @@ If user (you) run Prepress many times, it will store the compressed chunks in th
 | **User (Your) Calling Convention In Terminal** | ./Prepress/main ./Prepress/test.txt |
 | **\_fgh** |
 | 1.fgh | #H9G |
-| **error code** |
-| 0 |
+| **error code** | 0 |
 
 ### 5. If folder name was not obtained, the output file name will just be?
 Prepress will use the defualt convention to show the output file of decompressed data which is `.hgf`.
@@ -191,8 +189,7 @@ If user (you) run Postpress many times, it will just appennd the decompressed da
 | **.hgf** |
 | | @@AAAA|
 | | @@GCGG|
-| **error code** |
-| 0 |
+| **error code** | 0 |
 
 ### On Round Two
 
@@ -212,8 +209,7 @@ If user (you) run Postpress many times, it will just appennd the decompressed da
 | | @@AAAA |
 | | @@GCGG |
 | | @@TTTT |
-| **error code** |
-| 0 |
+| **error code** | 0 |
 
 ### 6. If input has read indexes with empty data
 Prepress will recognize read indexes without information. This means that if a read index was empty there is an empty file taking up that position. The reason I leave this feature is that during tests it was discovered that when Prepress disregards the empty read indexes, this violates the original pattern in the data.
@@ -525,7 +521,7 @@ Basing on a scenario where Prepress, Postpress, and the input file are in the sa
 ### **Proof**
 Folder layout: `Postpress		Prepress	READme.md	test.txt`\
 User (Your) calling convention: `./Prepress/main test.txt `\
-Folder layout (after successful compression): `Postpress	Prepress	READme.md	test_fgh	test.txt`
+Folder layout (after successful compression): `Postpress	Prepress	READme.md	test_fgh	test.txt`\
 a. Looking at snapshot **1.fgh**\
 User (Your) calling convention: `./Postpress/main -s ./test_fgh/1.fgh` or `./Postpress/main ./test_fgh/1.fgh -s`\
 Folder layout: `1.hgf	Postpress	Prepress	READme.md	test_fgh	test.txt`
