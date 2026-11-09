@@ -539,7 +539,7 @@ _append_decompressed_data:
 
 
 write_1:
-    // Writes To Disk And Exits
+    // Writes To Disk And Exits (When Read Returns 0)
     mov     X0,     X22
     mov     X1,     X25
     mov     X2,     X26
@@ -597,7 +597,7 @@ _reading_input_file_error:
     mov     X0,     X22
     mov     X16,    #6
     svc     0
-    bcs     _error_making_output_file
+    bcs     _error_making_output_file              // Informs User That There Was An Issue With The Output File
     mov     X0,     #9                             // Error Reading Input (Compressed) File
     b       _end_program
 _prepare_exit:
@@ -613,7 +613,7 @@ _prepare_exit:
     mov     X0,     X22
     mov     X16,    #6
     svc     0
-    bcs     _error_making_output_file
+    bcs     _error_making_output_file              // Informs User That There Was An Issue With The Output File
     mov     X0,     #0                             // No Errors - If close() Is Successful
     cmp     X8,     #1                             // Is Chunk Folder Decompression On
     bne     _end_program
